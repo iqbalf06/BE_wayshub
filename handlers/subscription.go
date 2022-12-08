@@ -57,7 +57,25 @@ func (h *handlerSubscription) AddSubscription(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	subscription, _ = h.SubscriptionRepository.GetChannel(id)
+	subscription, _ = h.SubscriptionRepository.GetSubscription(userId)
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: "success", Data: subscription}
+	json.NewEncoder(w).Encode(response)
+}
+
+func (h *handlerSubscription) GetSubscription(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	subscription, err := h.SubscriptionRepository.GetSubscription(id)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: "success", Data: subscription}
@@ -69,7 +87,7 @@ func (h *handlerSubscription) Unsubscribe(w http.ResponseWriter, r *http.Request
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
-	subscription, err := h.SubscriptionRepository.GetChannel(id)
+	subscription, err := h.SubscriptionRepository.GetSubscription(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
