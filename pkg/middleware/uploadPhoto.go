@@ -14,7 +14,7 @@ func UploadPhoto(next http.HandlerFunc) http.HandlerFunc {
 		// FormFile returns the first file for the given key `myFile`
 		// it also returns the FileHeader so we can get the Filename,
 		// the Header and the size of the file
-		file, _, err := r.FormFile("cover")
+		file, _, err := r.FormFile("photo")
 
 		if err != nil {
 			fmt.Println(err)
@@ -58,7 +58,7 @@ func UploadPhoto(next http.HandlerFunc) http.HandlerFunc {
 		tempFile.Write(fileBytes)
 
 		data := tempFile.Name()
-		filephoto := data[8:] // split uploads/
+		filephoto := data[15:] // split uploads/
 
 		// add filename to ctx
 		ctx := context.WithValue(r.Context(), "dataPhoto", filephoto)

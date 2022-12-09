@@ -58,7 +58,7 @@ func UploadCover(next http.HandlerFunc) http.HandlerFunc {
 		tempFile.Write(fileBytes)
 
 		data := tempFile.Name()
-		filecover := data[8:] // split uploads/
+		filecover := data[15:] // split uploads/
 
 		// add filename to ctx
 		ctx := context.WithValue(r.Context(), "dataCover", filecover)

@@ -10,7 +10,6 @@ import (
 	"wayshub/models"
 	"wayshub/repositories"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
@@ -28,36 +27,32 @@ func (h *handlerSubscription) AddSubscription(w http.ResponseWriter, r *http.Req
 
 	// get data user token
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["Id"].(float64))
-	fmt.Println(userId)
+	userId := int(userInfo["id"].(float64))
 
-	subscribe, _ := strconv.Atoi(r.FormValue("subscribe"))
+	// subscribe, _ := strconv.Atoi(r.FormValue("subscribe"))
+
+	userchanelId, _ := strconv.Atoi(r.FormValue("user_channel_id"))
+	println("ini apa ? ", userchanelId)
 	request := subscriptiondto.Subscriber{
-		Subscribe: subscribe,
+		UserChannelId: userchanelId,
 	}
 
-	validation := validator.New()
-	err := validation.Struct(request)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
+	// UserChannelId := 4
 	subscription := models.Subscription{
-		ChannelID: userId,
+		UserChannelId: request.UserChannelId,
+		ChannelId:     userId,
 	}
+	fmt.Println(subscription)
 
-	subscription, err = h.SubscriptionRepository.AddSubscription(subscription)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+	subscription, _ = h.SubscriptionRepository.AddSubscription(subscription)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+	// 	json.NewEncoder(w).Encode(response)
+	// 	return
+	// }
 
-	subscription, _ = h.SubscriptionRepository.GetSubscription(userId)
+	subscription, _ = h.SubscriptionRepository.GetSubscription(subscription.ID)
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: "success", Data: subscription}

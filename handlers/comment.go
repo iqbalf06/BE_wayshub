@@ -28,9 +28,11 @@ func (h *handlerComment) AddComment(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// get data user token
+	// println(r.Context())
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["Id"].(float64))
-	fmt.Println(userId)
+	fmt.Println(userInfo, " ini user info")
+	userId := int(userInfo["id"].(float64))
+	fmt.Println(userId, "masuk sini ?")
 
 	request := commentdto.CommentRequest{
 		Comment: r.FormValue("comment"),

@@ -15,6 +15,6 @@ func ChannelRoutes(r *mux.Router) {
 
 	r.HandleFunc("/channels", middleware.Auth(h.FindChannels)).Methods("GET")
 	r.HandleFunc("/channel/{id}", middleware.Auth(h.GetChannel)).Methods("GET")
-	r.HandleFunc("/channel/{id}", middleware.Auth(middleware.UploadCover(h.EditChannel))).Methods("PATCH")
+	r.HandleFunc("/channel/{id}", middleware.Auth((middleware.UploadPhoto(middleware.UploadCover(h.EditChannel))))).Methods("PATCH")
 	r.HandleFunc("/channel/{id}", middleware.Auth(h.DeleteChannel)).Methods("DELETE")
 }

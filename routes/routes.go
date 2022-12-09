@@ -9,5 +9,6 @@ func RouteInit(r *mux.Router) {
 	ChannelRoutes(r)
 	VideoRoutes(r)
 	CommentRoutes(r)
+	SubscriptionRoutes(r)
 
 }

@@ -36,6 +36,10 @@ func (h *handlerChannel) FindChannels(w http.ResponseWriter, r *http.Request) {
 		channels[i].Photo = os.Getenv("PATH_FILE") + p.Photo
 	}
 
+	for i, p := range channels {
+		channels[i].Cover = os.Getenv("PATH_FILE") + p.Cover
+	}
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: "success", Data: channels}
 	json.NewEncoder(w).Encode(response)
@@ -62,8 +66,11 @@ func (h *handlerChannel) GetChannel(w http.ResponseWriter, r *http.Request) {
 func (h *handlerChannel) EditChannel(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	dataContex := r.Context().Value("dataFile")
-	filename := dataContex.(string)
+	ContexPhoto := r.Context().Value("dataPhoto")
+	filephoto := ContexPhoto.(string)
+	ContexCover := r.Context().Value("dataCover")
+	filecover := ContexCover.(string)
+
 	request := authdto.RegisterRequest{
 		Channelname: r.FormValue("channelName"),
 		Email:       r.FormValue("email"),
@@ -92,12 +99,12 @@ func (h *handlerChannel) EditChannel(w http.ResponseWriter, r *http.Request) {
 		channel.Password = request.Password
 	}
 
-	if filename != "false" {
-		channel.Photo = filename
+	if filephoto != "false" {
+		channel.Photo = filephoto
 	}
 
-	if filename != "false" {
-		channel.Cover = filename
+	if filecover != "false" {
+		channel.Cover = filecover
 	}
 
 	data, err := h.ChannelRepository.EditChannel(channel)

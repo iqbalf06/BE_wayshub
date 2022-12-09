@@ -7,5 +7,5 @@ type Comment struct {
 	Comment   string    `gorm:"type: varchar(255)" json:"comment"`
 	CreatedAt time.Time `json:"-"`
 	ChannelID int       `json:"channel_id"`
-	Channel   Channel   `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	// Channel   Channel   `json:"-" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
